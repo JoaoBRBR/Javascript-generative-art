@@ -1,0 +1,25 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: black;
+}
+
+header{
+    padding: 5px;
+    height: 20px;
+    background: gray;
+    border-bottom: 5px ridge rgb(255, 255, 255);
+}
+
+.canvas-section{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: calc(100vh - 40px);
+}
+canvas{
+    border: 1px solid white;
+    margin: auto
+}
