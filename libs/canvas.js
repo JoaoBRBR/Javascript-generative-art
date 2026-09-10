@@ -1,18 +1,15 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const flockSize = 1000;
+const flockSize = 500;
 
 var flock = [];
-
 
 //nao vou ter uma funcao assim, quero um padrao de estrategia aqui, paar escolher o que mostrar no canvas
 function init() {
   for (let i = 0; i < flockSize; i++) {
-    const x = Math.random() * 800;
-    const y = Math.random() * 800;
-    const dx = Math.random() * 2 - 1;
-    const dy = Math.random() * 2 - 1;
-    flock.push(new Boid(x, y, dx, dy));
+    const pos = new Vector2D(Math.random() * 800, Math.random() * 800);
+    const dir = new Vector2D(Math.random() * 2 - 1, Math.random() * 2 - 1);
+    flock.push(new Boid(pos, dir));
   }
 }
 
