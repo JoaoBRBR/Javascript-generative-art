@@ -1,6 +1,7 @@
 class Boid {
+  //preciso de uma classe de vetor
   ver = { x: 0, y: 0 };
-  vision = 50;
+  vision = 30;
 
   constructor(x, y, dx, dy) {
     this.x = x;
@@ -23,7 +24,7 @@ class Boid {
     ctx.moveTo(this.x, this.y);
     ctx.lineTo(this.x + this.dx * 10, this.y + this.dy * 10);
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "white";
+    ctx.strokeStyle = "green";
     ctx.stroke();
 
     // ctx.beginPath();
@@ -35,15 +36,28 @@ class Boid {
   }
 
   move() {
+    // maluco
+    // if (Math.random() * 100 < 0.05) {
+    //   this.dx = Math.random() * 2 - 1;
+    //   this.dy = Math.random() * 2 - 1;
+    // }
+
     this.x += this.dx;
     this.y += this.dy;
 
-    if (this.x < 0 || this.x > 800) {
-      this.dx *= -1;
-    }
-    if (this.y < 0 || this.y > 800) {
-      this.dy *= -1;
-    }
+    // quica
+    // if (this.x < 0 || this.x > 800) {
+    //   this.dx *= -1;
+    // }
+    // if (this.y < 0 || this.y > 800) {
+    //   this.dy *= -1;
+    // }
+
+    // atravessa
+    if (this.x < 0) this.x = 800;
+    if (this.x > 800) this.x = 0;
+    if (this.y < 0) this.y = 800;
+    if (this.y > 800) this.y = 0;
   }
 
   rules(flock) {
