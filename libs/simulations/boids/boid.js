@@ -1,9 +1,20 @@
 class Boid {
-  vision = 30;
+  vision = 50;
 
   constructor(pos, dir) {
     this.pos = pos;
     this.dir = dir;
+    this.acc = new Vector2D();
+
+    this.maxSpeed = 1;
+    this.maxForce = 0.1;
+
+    this.alignPower = 100;
+    this.cohesionPower = 5;
+    this.separationPower = 0.2;
+
+    this.friends = 0;
+
     this.id = Math.random().toString(36).substring(2, 9);
   }
 
@@ -12,24 +23,30 @@ class Boid {
     ctx.moveTo(this.pos.x, this.pos.y);
     ctx.lineTo(this.pos.x + this.dir.x * 10, this.pos.y + this.dir.y * 10);
     ctx.lineWidth = 2;
-    ctx.strokeStyle = "green";
+
+    ctx.strokeStyle = `hsl(${this.friends * 10 + 200}, 100%, 50%)`;
     ctx.stroke();
-    //circulo
-    // ctx.beginPath();
-    // ctx.arc(this.pos.x, this.pos.y, this.vision, 0, 2 * Math.PI);
-    // ctx.fillStyle = "white";
-    // ctx.lineWidth = 1;
-    // ctx.strokeStyle = "white";
-    // ctx.stroke();
   }
 
-  move() {
+  move(canvas) {
+    const w = canvas.width;
+    const h = canvas.height;
+    if (this.acc.getMag() > this.maxForce) {
+      this.acc.setMag(this.maxForce);
+    }
+
+    this.dir.sum(this.acc);
+
+    if (this.dir.getMag() > this.maxSpeed) {
+      this.dir.setMag(this.maxSpeed);
+    }
+
     this.pos.sum(this.dir);
 
-    if (this.pos.x < 0) this.pos.x = 800;
-    if (this.pos.x > 800) this.pos.x = 0;
-    if (this.pos.y < 0) this.pos.y = 800;
-    if (this.pos.y > 800) this.pos.y = 0;
+    if (this.pos.x < 0) this.pos.x = w;
+    if (this.pos.x > w) this.pos.x = 0;
+    if (this.pos.y < 0) this.pos.y = h;
+    if (this.pos.y > h) this.pos.y = 0;
   }
 
   // TODO regra de chuncks para eficiencia
@@ -42,26 +59,28 @@ class Boid {
         near.push(flock[n]);
       }
     }
+    this.friends = near.length;
     if (near.length == 0) return;
 
     const c = this.#cohesion(near);
     const dPower = this.#getPowerByDistance(c);
-    const dPowerNear = this.#getPowerByDistance(c,true);
+    const dPowerNear = this.#getPowerByDistance(c, true);
 
-    const vecAlign = this.#align(near).setMag(dPower * 100);
-    const vecCoh = c.copy().setMag(dPower * 5);
-    const vecSep = this.#separation(near).setMag(dPowerNear * 0.3);
+    const vecAlign = this.#align(near).setMag(dPower * this.alignPower);
+    const vecCoh = c.copy().setMag(dPower * this.cohesionPower);
+    const vecSep = this.#separation(near).setMag(
+      dPowerNear * this.separationPower,
+    );
 
-    this.dir.sum(vecAlign);
-    this.dir.sum(vecCoh);
-    this.dir.sum(vecSep);
-
-    const velocity = this.dir.getMag();
-    if (velocity > 1) {
-      this.dir.setMag(1);
-    }
+    this.#applyForce(vecAlign);
+    this.#applyForce(vecCoh);
+    this.#applyForce(vecSep);
 
     near = [];
+  }
+
+  #applyForce(force) {
+    this.acc.sum(force);
   }
 
   #cohesion(near) {

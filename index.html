@@ -8,17 +8,26 @@
   </head>
   <body>
     <header>
+      <button id="boids">Boids</button>
+      <button id="boids3D">Boids3D</button>
       <button>Game of Life</button>
-      <button>Boids</button>
       <button>Matrix rain</button>
       <button>Spinning Donut</button>
     </header>
-    <!-- Canvas precisa ser tela cheia -->
+
     <div class="canvas-section">
-      <canvas id="canvas" width="800" height="800"></canvas>
+      <canvas id="canvas"></canvas>
     </div>
-    <script src="./libs/vector2D.js"></script>
-    <script src="./libs/boid.js"></script>
-    <script src="./libs/canvas.js"></script>
+
+    <!-- util helpers  -->
+    <script src="./libs/utils/vector2D.js"></script>
+    <script src="./libs/utils/vector3D.js"></script>
+    <!-- simulations -->
+    <script src="./libs/simulations/boids/boid.js"></script>
+    <script src="./libs/simulations/boids/flock.js"></script>
+    <script src="./libs/simulations/boids3D/boid3D.js"></script>
+    <script src="./libs/simulations/boids3D/flock3D.js"></script>
+    <!-- canvas manager -->
+    <script src="./libs/canvasManager.js"></script>
   </body>
 </html>
