@@ -1,5 +1,5 @@
 class Boid {
-  vision = 50;
+  vision = 40;
 
   constructor(pos, dir) {
     this.pos = pos;
@@ -7,15 +7,18 @@ class Boid {
     this.acc = new Vector2D();
 
     this.maxSpeed = 1;
-    this.maxForce = 0.1;
+    this.maxForce = 0.05;
 
     this.alignPower = 100;
-    this.cohesionPower = 5;
-    this.separationPower = 0.2;
+    this.cohesionPower = 8;
+    this.separationPower = 0.3;
 
     this.friends = 0;
 
     this.id = Math.random().toString(36).substring(2, 9);
+
+    //random
+    this.personality = new Vector2D();
   }
 
   draw(ctx) {
@@ -24,7 +27,11 @@ class Boid {
     ctx.lineTo(this.pos.x + this.dir.x * 10, this.pos.y + this.dir.y * 10);
     ctx.lineWidth = 2;
 
-    ctx.strokeStyle = `hsl(${this.friends * 10 + 200}, 100%, 50%)`;
+    const maxFriends = 70;
+    const currentFriends = Math.min(this.friends, maxFriends);
+    const ratio = currentFriends / maxFriends;
+    const hue = 120 - ratio * 120;
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
     ctx.stroke();
   }
 
@@ -51,6 +58,9 @@ class Boid {
 
   // TODO regra de chuncks para eficiencia
   rules(flock) {
+    // this.#setPersonality();
+    // this.#applyForce(this.personality);
+
     let near = [];
     for (let n = 0; n < flock.length; n++) {
       if (this.id == flock[n].id) continue;
@@ -77,6 +87,17 @@ class Boid {
     this.#applyForce(vecSep);
 
     near = [];
+  }
+
+  #setPersonality() {
+    if (Math.random() < 0.5) {
+      if (Math.random() < 0.5) {
+        this.personality.setMag(0);
+      } else {
+        this.personality.random();
+        this.personality.setMag(Math.random() * 100);
+      }
+    }
   }
 
   #applyForce(force) {

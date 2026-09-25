@@ -30,6 +30,12 @@ class Vector2D {
     return this;
   }
 
+  random() {
+    this.x = Math.random() *2 - 1;
+    this.y = Math.random() *2 - 1;
+    return this.normalize();
+  }
+
   setMag(mag) {
     this.normalize(this);
     this.x *= mag;
